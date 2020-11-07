@@ -27,21 +27,21 @@ export const DashboardHeader: React.FC = () => {
         <div className="">
           <div className="flex items-center justify-between h-16 px-4 sm:px-0">
             <div className="flex items-center">
-              <Link href="/dashboard">
+              <Link href="/projects">
                 <a href="" className="flex">
                   <img
-                    className="h-8 w-auto sm:h-10"
+                    className="w-auto h-8 sm:h-10"
                     src="/img/logo.png"
                     alt="Serverless SaaS Boilerplate"
                   />
                 </a>
               </Link>
               <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline">
-                  <Link href="/dashboard">
+                <div className="flex items-baseline ml-10">
+                  <Link href="/projects">
                     <a
                       className={
-                        router.pathname === '/dashboard'
+                        router.pathname === '/projects'
                           ? 'mr-4 px-3 py-2 rounded text-sm font-medium text-gray-900 bg-gray-200 focus:outline-none focus:text-gray-600 focus:bg-gray-100'
                           : 'mr-4 px-3 py-2 rounded text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:bg-gray-100'
                       }
@@ -63,26 +63,26 @@ export const DashboardHeader: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="hidden md:flex flex-row items-center">
+            <div className="flex-row items-center hidden md:flex">
               <div>
                 <PlanPill />
               </div>
-              <div className="ml-4 flex items-center md:ml-6">
-                <div className="ml-3 relative" ref={dropdownNode}>
+              <div className="flex items-center ml-4 md:ml-6">
+                <div className="relative ml-3" ref={dropdownNode}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
+                    className="flex items-center max-w-xs text-sm text-white rounded-full focus:outline-none focus:shadow-solid"
                   >
-                    <span className="inline-block h-8 w-8 rounded-full overflow-hidden bg-gray-200">
+                    <span className="inline-block w-8 h-8 overflow-hidden bg-gray-200 rounded-full">
                       {auth.user?.avatarUrl ? (
                         <img
-                          className="h-full w-full object-cover rounded"
+                          className="object-cover w-full h-full rounded"
                           src={auth.user.avatarUrl}
                           alt={auth.user.name}
                         />
                       ) : (
                         <svg
-                          className="h-full w-full text-gray-700"
+                          className="w-full h-full text-gray-700"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -101,8 +101,8 @@ export const DashboardHeader: React.FC = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl">
-                      <div className="py-1 rounded bg-white shadow-xs">
+                    <div className="absolute right-0 w-48 mt-2 origin-top-right rounded-lg shadow-xl">
+                      <div className="py-1 bg-white rounded shadow-xs">
                         <Link href="/account">
                           <a
                             href="#"
@@ -140,13 +140,13 @@ export const DashboardHeader: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="-mr-2 flex md:hidden" ref={hamburgerNode}>
+            <div className="flex -mr-2 md:hidden" ref={hamburgerNode}>
               <button
                 onClick={() => setNavbarOpen(!navbarOpen)}
-                className="inline-flex items-center justify-center p-2 rounded text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:text-gray-600"
+                className="inline-flex items-center justify-center p-2 text-gray-600 rounded hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:text-gray-600"
               >
                 <svg
-                  className="h-6 w-6"
+                  className="w-6 h-6"
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -180,11 +180,11 @@ export const DashboardHeader: React.FC = () => {
           ref={navbarNode}
         >
           <div className="px-2 py-3 sm:px-3">
-            <Link href="/dashboard">
+            <Link href="/projects">
               <a
                 href="#"
                 className={
-                  router.pathname?.includes('dashboard')
+                  router.pathname?.includes('projects')
                     ? 'block px-3 py-2 rounded text-base font-medium text-gray-900 bg-gray-200 focus:outline-none focus:text-white focus:bg-gray-100'
                     : 'block px-3 py-2 rounded text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:text-white focus:bg-gray-100'
                 }
@@ -210,13 +210,13 @@ export const DashboardHeader: React.FC = () => {
               <div className="flex-shrink-0">
                 {auth.user?.avatarUrl ? (
                   <img
-                    className="h-12 w-12 object-cover rounded-full"
+                    className="object-cover w-12 h-12 rounded-full"
                     src={auth.user.avatarUrl}
                     alt={auth.user.name}
                   />
                 ) : (
                   <svg
-                    className="h-12 w-12 text-gray-300 rounded-full"
+                    className="w-12 h-12 text-gray-300 rounded-full"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -233,10 +233,10 @@ export const DashboardHeader: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-3 px-2">
+            <div className="px-2 mt-3">
               <a
                 href="/#"
-                className="mt-1 block px-3 py-2 rounded text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:text-white focus:bg-gray-100"
+                className="block px-3 py-2 mt-1 text-base font-medium text-gray-600 rounded hover:text-gray-900 hover:bg-gray-200 focus:outline-none focus:text-white focus:bg-gray-100"
                 onClick={() => auth.signOut()}
               >
                 Sign out

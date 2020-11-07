@@ -42,7 +42,7 @@ const SignUpForm: React.FC<{ teamId?: string; email?: string }> = ({
 
   useEffect(() => {
     if (user) {
-      push('/dashboard');
+      push('/projects');
     }
   }, [user]);
 

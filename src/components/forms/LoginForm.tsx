@@ -20,7 +20,7 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      push('/dashboard');
+      push('/projects');
     }
   }, [user]);
 
@@ -29,7 +29,7 @@ const LoginForm: React.FC = () => {
     setError(null);
     signIn(data).then((response: { error?: { massage: string } }) => {
       setIsLoading(false);
-      response?.error ? setError(response.error) : push('/dashboard');
+      response?.error ? setError(response.error) : push('/projects');
     });
   };
 
