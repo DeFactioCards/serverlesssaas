@@ -6,8 +6,10 @@ import PageForm from 'components/forms/PageForm';
 import { db } from 'config/firebase';
 import { GetServerSideProps } from 'next';
 import Button from 'components/elements/Button';
+import { useRouter } from 'next/router';
 
-const DashboardPage: React.FC = ({ page }) => {
+const EditPage: React.FC = ({ page }: any) => {
+  const { push } = useRouter();
   const { user } = useRequireAuth();
   if (!user) return null;
 
@@ -18,10 +20,14 @@ const DashboardPage: React.FC = ({ page }) => {
     },
     first: {
       path: '/projects',
-      text: 'projects',
+      text: 'Projects',
     },
     second: {
-      path: '/projects/name/pages/new',
+      path: `/projects/${page.projectId}`,
+      text: 'Pages',
+    },
+    third: {
+      path: `/projects/${page.projectId}/pages/new`,
       text: 'New',
     },
   };
@@ -33,6 +39,7 @@ const DashboardPage: React.FC = ({ page }) => {
       .doc(page.id)
       .delete()
       .then(function () {
+        push(`/projects/${page.projectId}`);
         console.log('Document successfully deleted!');
       })
       .catch(function (error) {
@@ -95,4 +102,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   return { props: { page } };
 };
 
-export default DashboardPage;
+export default EditPage;

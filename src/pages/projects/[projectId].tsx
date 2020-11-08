@@ -8,12 +8,70 @@ import { db } from 'config/firebase';
 import Link from 'next/link';
 import Button from 'components/elements/Button';
 import { arrayMove } from 'utils/arrayMove';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
+const ProjectPage: React.FC<any> = ({ project }) => {
   const { user } = useRequireAuth();
-  const [pages, setPages] = useState(sortedPages);
-  if (!user) return null;
+  const [pages, setPages] = useState([]);
+
+  const sortPages = useCallback(
+    (ids, pages) => {
+      const sortedPages = [];
+      ids.map((id) => {
+        const page = pages.find((page) => page.id === id);
+        if (page) {
+          sortedPages.push(page);
+        }
+      });
+      setPages(sortedPages);
+    },
+    [setPages]
+  );
+
+  useEffect(() => {
+    const docRef = db.collection('projects').doc(project.id);
+    const unsubscribe = docRef.onSnapshot(async function (doc) {
+      const sortedPageIds = doc.data().sortedPageIds;
+      await docRef
+        .collection('pages')
+        .get()
+        .then(function (querySnapshot) {
+          const projectPages = [];
+          querySnapshot.forEach(function (doc) {
+            if (doc.exists) {
+              projectPages.push({ id: doc.id, ...doc.data() });
+            }
+          });
+          setPages(projectPages);
+          if (sortedPageIds) {
+            sortPages(sortedPageIds, projectPages);
+          }
+        })
+        .catch(function (error) {
+          console.log('Error getting documents: ', error);
+        });
+    });
+
+    return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onDragEnd = async (result) => {
+    const oldIndex = result.source.index;
+    const newIndex = result.destination.index;
+    const newArray = arrayMove(project.sortedPageIds, oldIndex, newIndex);
+    sortPages(newArray, pages);
+
+    const projectRef = db.collection('projects').doc(project.id);
+    await projectRef
+      .update({ sortedPageIds: newArray })
+      .then(function () {
+        console.log('Document successfully updated!');
+      })
+      .catch(function (error) {
+        console.error('Error updating document: ', error);
+      });
+  };
 
   const breadCrumbs = {
     back: {
@@ -30,31 +88,7 @@ const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
     },
   };
 
-  const onDragEnd = async (result) => {
-    const oldIndex = result.source.index;
-    const newIndex = result.destination.index;
-    const newArray = arrayMove(project.sortedPageIds, oldIndex, newIndex);
-    sortPages(newArray);
-
-    const projectRef = db.collection('projects').doc(project.id);
-    await projectRef
-      .update({ sortedPageIds: newArray })
-      .then(function () {
-        console.log('Document successfully updated!');
-      })
-      .catch(function (error) {
-        console.error('Error updating document: ', error);
-      });
-  };
-
-  const sortPages = (ids) => {
-    const sortedPages = [];
-    ids.map((id) => {
-      const page = pages.find((page) => page.id === id);
-      sortedPages.push(page);
-    });
-    setPages(sortedPages);
-  };
+  if (!user) return null;
 
   return (
     <Layout>
@@ -86,20 +120,20 @@ const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
                           Name
                         </th>
                         <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                          Slug
+                          Path
                         </th>
                         <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase bg-gray-50">
                           Section
                         </th>
                         <th className="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase bg-gray-50">
-                          Order
+                          Last updated
                         </th>
                         <th className="px-6 py-3 bg-gray-50"></th>
                       </tr>
                     </thead>
                     <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
                       <Droppable droppableId="droppable">
-                        {(provided, snapshot) => (
+                        {(provided) => (
                           <tbody
                             className="bg-white divide-y divide-gray-200"
                             {...provided.droppableProps}
@@ -111,7 +145,7 @@ const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
                                 draggableId={page.id}
                                 index={index}
                               >
-                                {(provided, snapshot) => (
+                                {(provided) => (
                                   <tr
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
@@ -127,7 +161,7 @@ const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
                                       {page.section || 'None'}
                                     </td>
                                     <td className="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap">
-                                      {page.order}
+                                      {page.updatedAt}
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium leading-5 text-right whitespace-no-wrap">
                                       <Link
@@ -162,9 +196,7 @@ const ProjectPage: React.FC<any> = ({ project, sortedPages }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const pages = [];
   let project = {};
-
   const docRef = db.collection('projects').doc(params.projectId);
 
   await docRef.get().then(function (doc) {
@@ -173,32 +205,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     }
   });
 
-  await docRef
-    .collection('pages')
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        // doc.data() is never undefined for query doc snapshots
-        if (doc.exists) {
-          pages.push({ id: doc.id, ...doc.data() });
-        }
-      });
-    })
-    .catch(function (error) {
-      console.log('Error getting documents: ', error);
-    });
-
-  const sortedPages = [];
-  project?.sortedPageIds?.map((id) => {
-    const page = pages.find((page) => page.id === id);
-    console.log('page:', page);
-    sortedPages.push(page);
-  });
-
-  sortedPages.filter((n) => n);
-
   return {
-    props: { project, sortedPages: sortedPages.length ? sortedPages : pages },
+    props: { project },
   };
 };
 

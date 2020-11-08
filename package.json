@@ -32,7 +32,6 @@
     "react-markdown": "^5.0.2",
     "react-mde": "^11.0.0",
     "react-transition-group": "4.4.1",
-    "showdown": "^1.9.1",
     "tailwindcss": "1.8.12"
   },
   "devDependencies": {

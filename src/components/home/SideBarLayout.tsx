@@ -1,5 +1,3 @@
-import { db } from 'config/firebase';
-import { GetStaticProps } from 'next';
 import Link from 'next/link';
 
 const SideBarLayout: any = ({ children, pages }) => {
@@ -54,11 +52,7 @@ const SideBarLayout: any = ({ children, pages }) => {
             </div>
             <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center flex-shrink-0 px-4">
-                <img
-                  className="w-auto h-8"
-                  src="https://tailwindui.com/img/logos/workflow-logo-on-white.svg"
-                  alt="Workflow"
-                />
+                <img className="w-auto h-8" src="/img/logo.png" alt="logo" />
               </div>
               <nav className="px-2 mt-5 space-y-1">
                 {pages?.map((page) => (
@@ -73,30 +67,6 @@ const SideBarLayout: any = ({ children, pages }) => {
                 ))}
               </nav>
             </div>
-            <div className="flex flex-shrink-0 p-4 border-t border-gray-200">
-              <a
-                href="/"
-                className="flex-shrink-0 block group focus:outline-none"
-              >
-                <div className="flex items-center">
-                  <div>
-                    <img
-                      className="inline-block w-10 h-10 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-base font-medium leading-6 text-gray-700 group-hover:text-gray-900">
-                      Tom Cook
-                    </p>
-                    <p className="text-sm font-medium leading-5 text-gray-500 transition duration-150 ease-in-out group-hover:text-gray-700 group-focus:underline">
-                      View profile
-                    </p>
-                  </div>
-                </div>
-              </a>
-            </div>
           </div>
           <div className="flex-shrink-0 w-14">
             {/* Force sidebar to shrink to fit close icon */}
@@ -110,15 +80,13 @@ const SideBarLayout: any = ({ children, pages }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex flex-col flex-1 h-0 bg-white border-r border-gray-200">
             <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
-              <div className="flex items-center flex-shrink-0 px-4">
-                <img
-                  className="w-auto h-8"
-                  src="https://tailwindui.com/img/logos/workflow-logo-on-white.svg"
-                  alt="Workflow"
-                />
+              <div className="flex items-center justify-center flex-shrink-0 px-4">
+                <Link href="/">
+                  <img className="w-auto h-16" src="/img/logo.png" alt="logo" />
+                </Link>
               </div>
               <nav className="flex-1 px-2 mt-5 space-y-1 bg-white">
-                <div className="pt-8">
+                <div className="pt-6">
                   {/* <h3
                     className="px-3 text-xs font-semibold leading-4 tracking-wider text-gray-500 uppercase"
                     id="projects-headline"

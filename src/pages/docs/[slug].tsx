@@ -22,13 +22,20 @@ const HomePage: NextPage<any> = ({ pages, currentPage }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  console.log(params);
   const pages = [];
+  const sortedPages = [];
   let currentPage = {};
+  let project = {};
 
-  await db
-    .collection('projects')
-    .doc('serverless-saas')
+  const docRef = db.collection('projects').doc('serverless-saas');
+
+  await docRef.get().then(function (doc) {
+    if (doc.exists) {
+      project = { id: doc.id, ...doc.data() };
+    }
+  });
+
+  await docRef
     .collection('pages')
     .get()
     .then(function (querySnapshot) {
@@ -46,15 +53,40 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       console.log('Error getting documents: ', error);
     });
 
-  return { props: { pages, currentPage } };
+  await docRef
+    .collection('pages')
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        if (doc.exists) {
+          pages.push({ id: doc.id, ...doc.data() });
+        }
+      });
+    })
+    .catch(function (error) {
+      console.log('Error getting documents: ', error);
+    });
+
+  project.sortedPageIds?.map((id) => {
+    const page = pages.find((page) => page.id === id);
+    if (page) {
+      sortedPages.push(page);
+    }
+  });
+
+  return {
+    props: {
+      pages: sortedPages,
+      currentPage,
+    },
+  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const pages = [];
+  const docRef = db.collection('projects').doc('serverless-saas');
 
-  await db
-    .collection('projects')
-    .doc('serverless-saas')
+  await docRef
     .collection('pages')
     .get()
     .then(function (querySnapshot) {

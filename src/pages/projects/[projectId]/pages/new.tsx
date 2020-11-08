@@ -3,8 +3,10 @@ import Layout from 'components/dashboard/Layout';
 import BreadCrumbs from 'components/dashboard/BreadCrumbs';
 
 import PageForm from 'components/forms/PageForm';
+import { useRouter } from 'next/router';
 
 const DashboardPage: React.FC = () => {
+  const { query } = useRouter();
   const { user } = useRequireAuth();
   if (!user) return null;
 
@@ -15,10 +17,14 @@ const DashboardPage: React.FC = () => {
     },
     first: {
       path: '/projects',
-      text: 'projects',
+      text: 'Projects',
     },
     second: {
-      path: '/projects/name/pages/new',
+      path: `/projects/${query.projectId}`,
+      text: 'Pages',
+    },
+    third: {
+      path: `/projects/${query.projectId}/pages/new`,
       text: 'New',
     },
   };
@@ -31,7 +37,7 @@ const DashboardPage: React.FC = () => {
           <div className="mt-2 md:flex md:items-center md:justify-between">
             <div className="flex-1 min-w-0">
               <h2 className="text-2xl font-bold leading-7 text-gray-800 sm:text-3xl sm:leading-9 sm:truncate">
-                New project
+                New page
               </h2>
             </div>
           </div>
