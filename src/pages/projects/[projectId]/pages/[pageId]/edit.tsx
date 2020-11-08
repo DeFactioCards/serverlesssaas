@@ -8,7 +8,7 @@ import { GetServerSideProps } from 'next';
 import Button from 'components/elements/Button';
 import { useRouter } from 'next/router';
 
-const EditPage: React.FC = ({ page }: any) => {
+const EditPage: React.FC<any> = ({ page }) => {
   const { push } = useRouter();
   const { user } = useRequireAuth();
   if (!user) return null;

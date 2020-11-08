@@ -25,7 +25,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const pages = [];
   const sortedPages = [];
   let currentPage = {};
-  let project = {};
+  let project = {} as any;
 
   const docRef = db.collection('projects').doc('serverless-saas');
 

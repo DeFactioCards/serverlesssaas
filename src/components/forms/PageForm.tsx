@@ -9,13 +9,13 @@ import { useRequireAuth } from 'hooks/useRequireAuth';
 import { db } from 'config/firebase';
 import { stringToSlug } from 'utils/makeId';
 
-const ProjectForm: React.FC = ({ page }: any) => {
+const ProjectForm: React.FC<any> = ({ page }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [value, setValue] = useState(page?.content || '**Hello world!!!**');
+  const [value, setValue] = useState(page?.content || '**Hello world!**');
   const [name, setName] = useState(page?.name || '');
   const [slug, setSlug] = useState(page?.slug || '');
-  const [selectedTab, setSelectedTab] = useState('write');
+  const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
 
   const { push, query } = useRouter();
   const auth = useRequireAuth();
@@ -41,7 +41,7 @@ const ProjectForm: React.FC = ({ page }: any) => {
 
     const pageRef = db
       .collection('projects')
-      .doc(query.projectId)
+      .doc(query.projectId.toString())
       .collection('pages')
       .doc(query.pageId || data.slug);
 

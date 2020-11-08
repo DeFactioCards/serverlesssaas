@@ -18,7 +18,7 @@ const HomePage: NextPage<any> = ({ pages }) => {
       >
         <div className="pt-2 pb-6 md:py-6">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 md:px-8">
-            <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-gray-900"></h1>
           </div>
           <div className="px-4 mx-auto max-w-7xl sm:px-6 md:px-8"></div>
         </div>
@@ -28,7 +28,7 @@ const HomePage: NextPage<any> = ({ pages }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  let project = {};
+  let project = {} as any;
   const docRef = db.collection('projects').doc('serverless-saas');
 
   await docRef.get().then(function (doc) {

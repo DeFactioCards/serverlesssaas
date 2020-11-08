@@ -195,7 +195,9 @@ const ProjectPage: React.FC<any> = ({ project }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+}: any) => {
   let project = {};
   const docRef = db.collection('projects').doc(params.projectId);
 
